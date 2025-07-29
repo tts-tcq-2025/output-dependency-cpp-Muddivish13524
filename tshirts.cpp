@@ -1,30 +1,26 @@
 #include <iostream>
-#include <cassert>
+#include <assert.h>
 
-// Returns the T-shirt size based on chest measurement in cms
-char getTshirtSize(int cms) {
-    if (cms < 38) {
-        return 'S';
-    } 
-    else if (cms <= 42) {   // fixed condition: include 38 and 42 in 'M' range
-        return 'M';
-    } 
-    else {
-        return 'L';
+char size(int cms) {
+    char sizeName = '\0';
+    if(cms < 38) {
+        sizeName = 'S';
+    } else if(cms > 38 && cms < 42) {
+        sizeName = 'M';
+    } else if(cms > 42) {
+        sizeName = 'L';
     }
+    return sizeName;
 }
 
 void testTshirtSize() {
-    std::cout << "\nT-shirt size test\n";
-    assert(getTshirtSize(37) == 'S');
-    assert(getTshirtSize(38) == 'M');  // added boundary test case
-    assert(getTshirtSize(40) == 'M');
-    assert(getTshirtSize(42) == 'M');  // added boundary test case
-    assert(getTshirtSize(43) == 'L');
-    std::cout << "All is well (maybe!)\n";
-}
+    std::cout << "\nTshirt size test\n";
+    assert(size(37) == 'S');
+    assert(size(40) == 'M');
+    assert(size(43) == 'L');
 
-int main() {
-    testTshirtSize();
-    return 0;
+    assert(size(38) == 'S');   
+    assert(size(42) == 'L');   
+
+    std::cout << "All is well (maybe!)\n";
 }
