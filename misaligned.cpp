@@ -1,30 +1,47 @@
 #include <iostream>
-#include <cassert>
-#include <string_view>
-#include <array>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <assert.h>
+#include "misaligned.h"
 
-constexpr std::array<std::string_view, 5> majorColors = {"White", "Red", "Black", "Yellow", "Violet"};
-constexpr std::array<std::string_view, 5> minorColors = {"Blue", "Orange", "Green", "Brown", "Slate"};
+struct ColorPair {
+    int index;
+    std::string major;
+    std::string minor;
+};
 
-int printColorMap() {
-    int count = 0;
-    for (size_t i = 0; i < majorColors.size(); ++i) {
-        for (size_t j = 0; j < minorColors.size(); ++j) {
-            std::cout << (i * minorColors.size() + j) << " | " << majorColors[i] << " | " << minorColors[j] << '\n';
-            ++count;
+std::vector<ColorPair> generateColorMap();
+std::string formatColorMapLine(const ColorPair& entry);
+
+std::vector<ColorPair> generateColorMap() {
+    const char* majorColor[] = {"White", "Red", "Black", "Yellow", "Violet"};
+    const char* minorColor[] = {"Blue", "Orange", "Green", "Brown", "Slate"};
+    std::vector<ColorPair> colorMap;
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            colorMap.push_back({i * 5 + j, majorColor[i], minorColor[i]});
         }
     }
-    return count;
+    return colorMap;
 }
 
-void testPrintColorMap() {
-    std::cout << "\nPrint color map test\n";
-    int result = printColorMap();
-    assert(result == static_cast<int>(majorColors.size() * minorColors.size()));
-    std::cout << "All is well (maybe!)\n";
+std::string formatColorMapLine(const ColorPair& entry) {
+    std::ostringstream oss;
+    oss << entry.index << " | " << entry.major << " | " << entry.minor;
+    return oss.str();
+}
+void printOnConsole(std::string& lineContent){
+  std::cout<<lineContent;
+}
+int printColorMap(std::function<void(std::string&) printFn)
+{
+    auto colorMap = generateColorMap();  
+    for (ColorPair &entry : colorMap) 
+    {
+        printFn(formatColorMapLine(entry) << "\n");
+    }
+    return colorMap.size();
 }
 
-int main() {
-    testPrintColorMap();
-    return 0;
-}
+
